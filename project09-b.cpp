@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string.h>
 
 #define ERROR 1
 #define DEBUG true
@@ -40,9 +41,11 @@ void getFileName(char fileName[])
 //Param output: MadLib with replaced words
 void readFile(char fileName[], char output[])
 {
+   bool seen_chevron = false;
    int numChar = 0;
    char letter;
    char madlibPrompt[STRING_SIZE];
+   char userInput[STRING_SIZE];
 
    ifstream fin(fileName);
    if (fin.fail())
@@ -57,7 +60,38 @@ void readFile(char fileName[], char output[])
    while (numChar < STRING_SIZE && fin >> letter)  
    {
       if(DEBUG) cout << "Looking at char " << letter << endl;
+
+      //Start builing the madlib prompt
+      if (seen_chevron)
+      {
+         //prompt the usere with the madldib prompt and save inupt to output string
+         if (letter == '>')
+	 {
+	    seen_chevron = false;
+	    if (DEBUG) cout << "Seen right chevron" << endl;
+	    cout << madlibPrompt << ": ";
+	    cin >> userInput;
+	    //TODO add userinput to output
+	    memset(madlibPrompt, 0, STRING_SIZE);
+	 }
+	 else
+         {
+	    strncat(madlibPrompt, &letter, 1);
+	 }
+      }
+      else // not seen chevron
+      {
+         if (letter == '<')
+	 {
+	    if (DEBUG) cout << "Seen left chevron" << endl;
+	    seen_chevron = true;
+	 }
+	 //save character to output
+	 else
+	 {
+	 }
+      }
    }
-fin.close();
+	fin.close();
 }
 
