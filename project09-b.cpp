@@ -11,6 +11,7 @@ using namespace std;
 //Function prototypes
 void getFileName(char []);
 void readFile(char[], char[]);
+void printOutput(char[]);
 
 int main()
 {
@@ -21,6 +22,7 @@ int main()
    //Parse file
    readFile(fileName, output);
    //Print resulting madlib
+   printOutput(output);
    return 0;
 }
 
@@ -69,11 +71,16 @@ void readFile(char fileName[], char output[])
 	 {
 	    seen_chevron = false;
 	    if (DEBUG) cout << "Seen right chevron" << endl;
+	    //TODO If the length of the madlibPrompt is 1, then check if it is one of the
+	    //special characters
+	    //TODO if the prompt is one of the special chracters, then don't prompt user
+	    //just swap it out for what it needs to be
 	    cout << madlibPrompt << ": ";
 	    cin >> userInput;
 	    //TODO add userinput to output
 	    memset(madlibPrompt, 0, STRING_SIZE);
 	 }
+
 	 else
          {
 	    strncat(madlibPrompt, &letter, 1);
@@ -83,15 +90,21 @@ void readFile(char fileName[], char output[])
       {
          if (letter == '<')
 	 {
+	    //Assuming there will not be nested chevrons
 	    if (DEBUG) cout << "Seen left chevron" << endl;
 	    seen_chevron = true;
 	 }
 	 //save character to output
 	 else
 	 {
+	    strncat(madlibPrompt, &letter, 1);
 	 }
       }
    }
 	fin.close();
 }
 
+void printOutput(char output[])
+{
+   cout << output;
+}
