@@ -59,7 +59,7 @@ void readFile(char fileName[], char output[])
    //Look at eah char && if letter is < then save it in the madlibPrompt
    //until you see a >. After the '>', prompt the user for that variable
    //Save user input to output string
-   while (numChar < STRING_SIZE && fin >> letter)  
+   while (numChar < STRING_SIZE && fin >> noskipws >> letter)  
    {
       if(DEBUG) cout << "Looking at char " << letter << endl;
 
@@ -69,15 +69,53 @@ void readFile(char fileName[], char output[])
          //prompt the usere with the madldib prompt and save inupt to output string
          if (letter == '>')
 	 {
+	    bool outputString = false;
 	    seen_chevron = false;
-	    if (DEBUG) cout << "Seen right chevron" << endl;
-	    //TODO If the length of the madlibPrompt is 1, then check if it is one of the
-	    //special characters
-	    //TODO if the prompt is one of the special chracters, then don't prompt user
-	    //just swap it out for what it needs to be
-	    cout << madlibPrompt << ": ";
-	    cin >> userInput;
-	    //TODO add userinput to output
+	    if (strlen(madlibPrompt) == 1)
+	    {
+	       
+	      switch (madlibPrompt[0])
+	      {
+		 case '#':
+		    strncat(output, "\n", 1);
+		 break;
+		 case '{':
+		    strncat(output, " ", 1);
+		    strncat(output, "\"", 1);
+		 break;
+		 case '}': 
+		    strncat(output, "\"", 1);
+		    strncat(output, " ", 1);
+		 break;
+		 case '[':
+		    strncat(output, " ", 1);
+		    strncat(output, "\'", 1);
+		 break;
+		 case ']':
+		    strncat(output, "\'", 1);
+		    strncat(output, " ", 1);
+		 break;
+		 default:
+		       outputString = true;
+		       //Assuming that one character prompts will always be special
+		 break;
+	      }        
+	    }
+	    else
+	    {
+	    	outputString = true;
+            }
+	    if (outputString)
+	    {
+		    if (DEBUG) cout << "Seen right chevron" << endl;
+		    //TODO If the length of the madlibPrompt is 1, then check if it is one of the
+		    //special characters
+		    //TODO if the prompt is one of the special chracters, then don't prompt user
+		    //just swap it out for what it needs to be
+		    cout << madlibPrompt << ": ";
+		    //cin >> userInput;
+		    //TODO add userinput to output
+	  }
 	    memset(madlibPrompt, 0, STRING_SIZE);
 	 }
 
@@ -97,7 +135,7 @@ void readFile(char fileName[], char output[])
 	 //save character to output
 	 else
 	 {
-	    strncat(madlibPrompt, &letter, 1);
+	    strncat(output, &letter, 1);
 	 }
       }
    }
