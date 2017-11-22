@@ -22,15 +22,16 @@ the mad lib.
 #include <string.h>
 using namespace std;
 
-#define DEBUG false
+#define DEBUG true
 
 void getFileName(char fileName[])
 {
    if(DEBUG) cout << "Starting the program" << endl;
    cout << "Please enter the filename of the Mad Lib: ";
    cin >> fileName;
+   if(DEBUG) 
+      cout << "You opened the file: " << fileName << endl;
 }
-
 
 void promptUser(char text[], int count)
 {
@@ -106,8 +107,12 @@ int readFile(char fileName[], char madLib[][32])
       numWords++;
    }
    fin.close();
+   
    return numWords; 
 }
+
+/******************************************************************************
+ */
  
 void display (char madLib[][32], int numWords)   
 {
@@ -117,8 +122,6 @@ void display (char madLib[][32], int numWords)
          cout << madLib[i];
       else if (madLib[i][0] == '.' || madLib[i][0] == ',')
          cout << madLib[i];
-      else
-         cout << " " << madLib[i];
    }
 }
 
