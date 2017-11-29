@@ -52,20 +52,6 @@ void getFileName(char fileName[])
       cout << "You opened the file: " << fileName << endl;
 }
 
-bool isPunctuation(char nxword[])
-{
-   return nxword[0] == ',' || nxword[0] == ',' || nxword[0] == '!' || nxwor[0] == '?';
-}
-
-void printSpace(char pword[], char nxword[])
-{
-   if (pword[1] == '{' || pword[1] == '[' || pword[1] == '#')
-      return;
-   if (nxword[1] == '}' || nxword[1] == ']' || nxword == '#' || isPunctuation(nxword))
-      return;
-      cout << " ";
-      return;
-}
 
 //Opens file and parse contents
 //Replaces words in <> with user input
