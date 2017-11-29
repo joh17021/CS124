@@ -126,6 +126,12 @@ void readFile(char fileName[], char output[])
                     if (DEBUG) cout << "Seen right chevron" << endl;
                     madlibPrompt[0] = toupper(madlibPrompt[0]);
                     int newSize;
+                    for (int i = 1; i < 256; ++i)
+                    {
+                        if (madlibPrompt[i] == '_') {
+                            madlibPrompt[i] = ' ';
+                        }
+                    }
                     cout << "\t" << madlibPrompt << ": ";
                     cin >> userInput;
                     //add userinput to output
@@ -154,12 +160,6 @@ void readFile(char fileName[], char output[])
             {
                 strncat(output, &letter, 1);
             }
-        }
-    }
-    for (int i = 1; i < 256; ++i)
-    {
-        if (madlibPrompt[i] == '_') {
-            madlibPrompt[i] = ' ';
         }
     }
     fin.close();
