@@ -59,6 +59,7 @@ void getFileName(char fileName[])
 //Param output: MadLib with replaced words
 void readFile(char fileName[], char output[])
 {
+    bool skip_next = false;
     bool seen_chevron = false;
     int numChar = 0;
     char letter;
@@ -96,20 +97,22 @@ void readFile(char fileName[], char output[])
                         strncat(output, "\n", 1);
                         break;
                     case '{':
-                        //strncat(output, " ", 1);
                         strncat(output, "\"", 1);
+                        skip_next = true;
                         break;
                     case '}':
+                        // TODO Only do it if isspace()
+                        output[strlen(output)-1] = 0;
                         strncat(output, "\"", 1);
-                        //strncat(output, " ", 1);
                         break;
                     case '[':
-                        //strncat(output, " ", 1);
                         strncat(output, "'", 1);
+                        skip_next = true;
                         break;
                     case ']':
+                        // TODO Only do it if isspace()
+                        output[strlen(output)-1] = 0;
                         strncat(output, "'", 1);
-                        //strncat(output, " ", 1);
                         break;
                     default:
                         outputstring = true;
@@ -158,7 +161,11 @@ void readFile(char fileName[], char output[])
             //save character to output
             else
             {
-                strncat(output, &letter, 1);
+                if (skip_next){
+                    skip_next = false;
+                } else {
+                    strncat(output, &letter, 1);
+                }
             }
         }
     }
