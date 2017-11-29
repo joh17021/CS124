@@ -1,10 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
-
+#include <stdio.h>
 #define ERROR 1
-#define DEBUG true
-#define STRING_SIZE 256
+#define DEBUG false
 
 using namespace std;
 
@@ -14,15 +13,31 @@ void readFile(char[], char[]);
 void printOutput(char[]);
 
 int main()
-{
-   //Read in file from the user
-   char fileName[STRING_SIZE];
-   char output[STRING_SIZE];
-   getFileName(fileName);
-   //Parse file
-   readFile(fileName, output);
-   //Print resulting madlib
-   printOutput(output);
+{  
+   bool keepGoing = true;
+   char userInput[256];
+   while (keepGoing)
+   {
+	   //Read in file from the user
+	   char fileName[256];
+	   char output[256];
+	   getFileName(fileName);
+	   //Parse file
+	   readFile(fileName, output);
+           cout << endl;
+	   //Print resulting madlib
+	   printOutput(output);
+	   cout << "Do you want to play again? (y/n)";
+	   cin.getline(userInput, 256);
+	   if (userInput[0] == 'y' || userInput[0] == 'Y')
+	   {
+	      keepGoing = true;
+	   }
+	   else
+	   {
+	      keepGoing = false;
+	   }
+   }
    return 0;
 }
 
@@ -37,6 +52,21 @@ void getFileName(char fileName[])
       cout << "You opened the file: " << fileName << endl;
 }
 
+bool isPunctuation(char nxword[])
+{
+   return nxword[0] == ',' || nxword[0] == ',' || nxword[0] == '!' || nxwor[0] == '?';
+}
+
+void printSpace(char pword[], char nxword[])
+{
+   if (pword[1] == '{' || pword[1] == '[' || pword[1] == '#')
+      return;
+   if (nxword[1] == '}' || nxword[1] == ']' || nxword == '#' || isPunctuation(nxword))
+      return;
+      cout << " ";
+      return;
+}
+
 //Opens file and parse contents
 //Replaces words in <> with user input
 //Param fileName: file to parse input
@@ -46,30 +76,30 @@ void readFile(char fileName[], char output[])
    bool seen_chevron = false;
    int numChar = 0;
    char letter;
-   char madlibPrompt[STRING_SIZE];
-   char userInput[STRING_SIZE];
+   char madlibPrompt[256];
+   char userInput[256];
 
    ifstream fin(fileName);
    if (fin.fail())
    {
-      cout << "Error reading file: " << fileName << endl;
+      cout << "error reading file: " << fileName << endl;
       throw ERROR;
    }
 
-   //Look at eah char && if letter is < then save it in the madlibPrompt
-   //until you see a >. After the '>', prompt the user for that variable
-   //Save user input to output string
-   while (numChar < STRING_SIZE && fin >> noskipws >> letter)  
+   //look at eah char && if letter is < then save it in the madlibprompt
+   //until you see a >. after the '>', prompt the user for that variable
+   //save user input to output string
+   while (numChar < 256  && fin >> noskipws >> letter)  
    {
-      if(DEBUG) cout << "Looking at char " << letter << endl;
+      if(DEBUG) cout << "looking at char " << letter << endl;
 
-      //Start builing the madlib prompt
+      //start builing the madlib prompt
       if (seen_chevron)
       {
          //prompt the usere with the madldib prompt and save inupt to output string
          if (letter == '>')
 	 {
-	    bool outputString = false;
+	    bool outputstring = false;
 	    seen_chevron = false;
 	    if (strlen(madlibPrompt) == 1)
 	    {
@@ -80,43 +110,50 @@ void readFile(char fileName[], char output[])
 		    strncat(output, "\n", 1);
 		 break;
 		 case '{':
-		    strncat(output, " ", 1);
+		    //strncat(output, " ", 1);
 		    strncat(output, "\"", 1);
 		 break;
 		 case '}': 
 		    strncat(output, "\"", 1);
-		    strncat(output, " ", 1);
+		    //strncat(output, " ", 1);
 		 break;
 		 case '[':
-		    strncat(output, " ", 1);
-		    strncat(output, "\'", 1);
+		    //strncat(output, " ", 1);
+		    strncat(output, "'", 1);
 		 break;
 		 case ']':
-		    strncat(output, "\'", 1);
-		    strncat(output, " ", 1);
+		    strncat(output, "'", 1);
+		    //strncat(output, " ", 1);
 		 break;
 		 default:
-		       outputString = true;
+		       outputstring = true;
 		       //Assuming that one character prompts will always be special
 		 break;
 	      }        
 	    }
 	    else
 	    {
-	    	outputString = true;
+	    	outputstring = true;
             }
-	    if (outputString)
+	    if (outputstring)
 	    {
 		    if (DEBUG) cout << "Seen right chevron" << endl;
-		    //TODO If the length of the madlibPrompt is 1, then check if it is one of the
-		    //special characters
-		    //TODO if the prompt is one of the special chracters, then don't prompt user
-		    //just swap it out for what it needs to be
-		    cout << madlibPrompt << ": ";
-		    //cin >> userInput;
-		    //TODO add userinput to output
+		    madlibPrompt[0] = toupper(madlibPrompt[0]); 
+		    int newSize;
+		    for (int i = 1; i < 256; ++i)
+		    {
+                       if (madlibPrompt[i] == '_'){
+		          madlibPrompt[i] = ' ';
+			}
+                    }
+		    cout << "\t" << madlibPrompt << ": ";
+		    cin >> userInput;
+		    //add userinput to output
+		    strncat(output, userInput, strlen(userInput));
+
 	  }
-	    memset(madlibPrompt, 0, STRING_SIZE);
+	    memset(madlibPrompt, 0, 256);
+	    memset(userInput, 0, 256);
 	 }
 
 	 else
